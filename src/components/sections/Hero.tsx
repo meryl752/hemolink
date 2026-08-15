@@ -44,38 +44,85 @@ export function Hero() {
       )
         return;
 
-      const sangMark = title.querySelector(".hero-sang");
-      if (sangMark) sangMark.replaceWith(...Array.from(sangMark.childNodes));
-
-      const split = new SplitText(title, { type: "chars,words,lines" });
-      split.words.forEach((word) => {
-        if (word.textContent?.trim() === "sang") {
-          word.classList.add("hero-sang");
-        }
-      });
-      split.lines.forEach((line) => {
-        (line as HTMLElement).style.overflow = "hidden";
-        (line as HTMLElement).style.display = "block";
-      });
-
-      gsap
-        .timeline({ defaults: { ease: "editorial" } })
-        .from(split.chars, {
-          yPercent: 115,
-          rotateZ: 6,
-          stagger: 0.018,
-          duration: 1.15,
-        })
-        .from(silver, { y: 24, autoAlpha: 0, duration: 0.9 }, "-=0.55")
-        .fromTo(
-          photo,
-          { autoAlpha: 0.65 },
-          { autoAlpha: 1, duration: 1.2 },
-          0.15,
-        );
-
       const mm = gsap.matchMedia();
+
+      mm.add("(max-width: 1023px)", () => {
+        const introInk = root.current?.querySelector<HTMLElement>(".hero-intro-ink");
+        const introSilver = root.current?.querySelector(".hero-intro-silver");
+        if (!introInk || !introSilver) return;
+
+        const introSang = introInk.querySelector(".hero-sang");
+        if (introSang) introSang.replaceWith(...Array.from(introSang.childNodes));
+
+        const introSplit = new SplitText(introInk, { type: "chars,words,lines" });
+        introSplit.words.forEach((word) => {
+          if (word.textContent?.trim() === "sang") {
+            word.classList.add("hero-sang");
+          }
+        });
+        introSplit.lines.forEach((line) => {
+          (line as HTMLElement).style.overflow = "hidden";
+          (line as HTMLElement).style.display = "block";
+        });
+
+        gsap
+          .timeline({ defaults: { ease: "editorial" } })
+          .from(introSplit.chars, {
+            yPercent: 115,
+            rotateZ: 6,
+            stagger: 0.018,
+            duration: 1.15,
+          })
+          .from(introSilver, { y: 24, autoAlpha: 0, duration: 0.9 }, "-=0.55");
+
+        const second = root.current?.querySelector<HTMLElement>(".hero-mobile-b");
+        if (second) {
+          gsap.from(second, {
+            y: 28,
+            autoAlpha: 0,
+            duration: 0.9,
+            ease: "editorial",
+            scrollTrigger: {
+              trigger: second,
+              start: "top 86%",
+            },
+          });
+        }
+
+        return () => introSplit.revert();
+      });
+
       mm.add("(min-width: 1024px)", () => {
+        const sangMark = title.querySelector(".hero-sang");
+        if (sangMark) sangMark.replaceWith(...Array.from(sangMark.childNodes));
+
+        const split = new SplitText(title, { type: "chars,words,lines" });
+        split.words.forEach((word) => {
+          if (word.textContent?.trim() === "sang") {
+            word.classList.add("hero-sang");
+          }
+        });
+        split.lines.forEach((line) => {
+          (line as HTMLElement).style.overflow = "hidden";
+          (line as HTMLElement).style.display = "block";
+        });
+
+        gsap
+          .timeline({ defaults: { ease: "editorial" } })
+          .from(split.chars, {
+            yPercent: 115,
+            rotateZ: 6,
+            stagger: 0.018,
+            duration: 1.15,
+          })
+          .from(silver, { y: 24, autoAlpha: 0, duration: 0.9 }, "-=0.55")
+          .fromTo(
+            photo,
+            { autoAlpha: 0.65 },
+            { autoAlpha: 1, duration: 1.2 },
+            0.15,
+          );
+
         gsap.set(imgA, { transformOrigin: "50% 45%" });
         gsap.set(imgB, { autoAlpha: 0 });
         gsap.set(copyMid, { autoAlpha: 0 });
@@ -145,13 +192,30 @@ export function Hero() {
         );
         slide.to(imgB, { autoAlpha: 1, ease: "none", duration: 0.35 }, 1.52);
         slide.to(stack, { autoAlpha: 1, y: 0, ease: "none", duration: 0.38 }, 1.72);
+
+        return () => split.revert();
       });
+
+      return () => mm.revert();
     },
     { scope: root },
   );
 
   return (
     <section id="hero" ref={root} className="relative bg-hero">
+      <div className="hero-intro flex min-h-svh items-center px-5 lg:hidden md:px-8">
+        <h1 className="max-w-[18ch] text-left font-display text-[clamp(3.15rem,10.5vw,3.85rem)] leading-[0.94] font-medium tracking-[-0.03em]">
+          <span className="hero-intro-ink block text-ink">
+            Votre premier
+            <br />
+            don de <span className="hero-sang">sang</span>
+          </span>
+          <span className="hero-intro-silver hero-silver mt-[0.08em] block">
+            en toute confiance !
+          </span>
+        </h1>
+      </div>
+
       <div className="max-lg:min-h-0 min-h-[100svh] lg:h-[340vh]">
         <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden pt-24 max-lg:min-h-0 max-lg:overflow-visible max-lg:pt-0 lg:sticky lg:top-0 lg:h-svh">
           <div className="hero-photo hero-photo-mask pointer-events-none absolute top-0 right-0 z-0 h-full w-[min(62vw,820px)] max-lg:relative max-lg:right-auto max-lg:h-[48svh] max-lg:w-full max-lg:overflow-hidden">
@@ -190,14 +254,22 @@ export function Hero() {
                 <EligibilityForm />
               </div>
 
-              <div className="relative max-lg:w-full">
-                <h1 className="hero-copy max-w-full font-display text-[clamp(3.15rem,7.8vw,6.4rem)] leading-[0.94] font-medium tracking-[-0.03em] max-lg:text-[2.65rem]">
+              <p className="hero-mobile-b max-w-full text-left font-display text-[clamp(2.85rem,9.5vw,3.6rem)] leading-[0.94] font-medium tracking-[-0.03em] text-ink lg:hidden">
+                <span className="block">Un geste simple</span>
+                <span className="block">peut déjà</span>
+                <span className="hero-silver mt-[0.08em] block">
+                  sauver des vies.
+                </span>
+              </p>
+
+              <div className="relative max-lg:hidden">
+                <h1 className="hero-copy max-w-full font-display text-[clamp(3.15rem,7.8vw,6.4rem)] leading-[0.94] font-medium tracking-[-0.03em]">
                   <span className="hero-title-ink block text-ink">
                     Votre premier
                     <br />
                     don de <span className="hero-sang">sang</span>
                   </span>
-                  <span className="hero-silver hero-silver-a mt-[0.08em] block whitespace-nowrap max-lg:whitespace-normal">
+                  <span className="hero-silver hero-silver-a mt-[0.08em] block whitespace-nowrap">
                     en toute confiance !
                   </span>
                 </h1>

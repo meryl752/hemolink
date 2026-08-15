@@ -228,8 +228,22 @@
   mask-image: linear-gradient(to top, #000 0%, #000 36%, transparent 72%);
 }
 
-.center-scroller {
+.center-scroller,
+.impact-scroller {
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1023px) {
+  .impact-scroller {
+    touch-action: pan-x pinch-zoom;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .impact-track {
+    flex-wrap: nowrap;
+    transform: none !important;
+  }
 }
 
 .centers-results {
@@ -265,11 +279,16 @@
   }
 }
 
+.faq-ring {
+  border: 1.6px solid var(--color-ink);
+  border-radius: 2.4rem 2rem 2.65rem 2.15rem / 2.05rem 2.7rem 1.95rem 2.45rem;
+}
+
 .faq-vein-trail {
   stroke: var(--color-blood);
-  opacity: 0.9;
-  stroke-dasharray: 0.16 0.84;
-  animation: faq-vein-flow 6.8s linear infinite;
+  opacity: 0.85;
+  stroke-dasharray: 0.12 0.88;
+  animation: faq-vein-flow 7.4s linear infinite;
 }
 
 @keyframes faq-vein-flow {
@@ -278,7 +297,8 @@
   }
 }
 
-.center-scroller::-webkit-scrollbar {
+.center-scroller::-webkit-scrollbar,
+.impact-scroller::-webkit-scrollbar {
   display: none;
 }
 

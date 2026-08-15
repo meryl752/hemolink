@@ -86,9 +86,9 @@ export function Centers() {
     <section id="centres" className="relative overflow-x-clip bg-hero text-ink">
       <div className="mx-auto max-w-[1440px] px-5 pt-12 pb-24 md:px-8 md:pt-16 md:pb-32 lg:px-12">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:gap-10">
-            <h2 className="max-w-[16ch] shrink-0 font-display text-[clamp(2rem,4.4vw,4.2rem)] leading-[0.96] font-medium tracking-[-0.03em]">
-              <span className="block">Le centre le plus</span>
-              <span className="block">proche de vous.</span>
+            <h2 className="max-w-[18ch] shrink-0 font-display text-[clamp(2rem,4.4vw,4.2rem)] leading-[0.96] font-medium tracking-[-0.03em]">
+              <span className="block">Recherchez le centre</span>
+              <span className="block">le plus proche de vous.</span>
             </h2>
 
             <form

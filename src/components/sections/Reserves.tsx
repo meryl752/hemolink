@@ -2,7 +2,12 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { LEVEL_LABEL, RESERVES, type ReserveLevel } from "@/data/reserves";
+import {
+  LEVEL_LABEL,
+  RESERVES,
+  type BloodGroup,
+  type ReserveLevel,
+} from "@/data/reserves";
 import { gsap, registerGsap } from "@/lib/gsap-client";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 
@@ -15,19 +20,16 @@ const WASH: Record<ReserveLevel, string> = {
   confortable: "bg-silver/50",
 };
 
-const DROP_POS: Record<
-  (typeof RESERVES)[number]["group"],
-  { left: string; top: string; size: string }
-> = {
-  "O-": { left: "50%", top: "18%", size: "23%" },
-  "O+": { left: "36%", top: "37%", size: "25%" },
-  "B-": { left: "64%", top: "37%", size: "25%" },
-  "A-": { left: "24%", top: "56%", size: "25%" },
-  "B+": { left: "50%", top: "55%", size: "25%" },
-  "A+": { left: "76%", top: "56%", size: "25%" },
-  "AB-": { left: "37%", top: "75%", size: "25%" },
-  "AB+": { left: "63%", top: "75%", size: "25%" },
-};
+const DROP_ROWS: BloodGroup[][] = [
+  ["O-"],
+  ["O+", "B-"],
+  ["A-", "B+", "A+"],
+  ["AB-", "AB+"],
+];
+
+const BY_GROUP = Object.fromEntries(
+  RESERVES.map((item) => [item.group, item]),
+) as Record<BloodGroup, (typeof RESERVES)[number]>;
 
 export function Reserves() {
   const root = useRef<HTMLElement>(null);
@@ -57,56 +59,74 @@ export function Reserves() {
 
   return (
     <section id="reserves" ref={root} className="bg-hero text-ink">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-14 px-5 pt-24 pb-24 md:px-8 md:pt-32 md:pb-32 lg:flex-row lg:items-center lg:justify-between lg:gap-20 lg:px-12">
-        <h2 className="max-w-[14ch] font-display text-[clamp(2rem,4.4vw,4.2rem)] leading-[0.96] font-medium tracking-[-0.03em]">
+      <svg width="0" height="0" className="absolute" aria-hidden="true">
+        <defs>
+          <clipPath id="blood-drop" clipPathUnits="objectBoundingBox">
+            <path d="M0.5 0C0.5 0 0.06 0.38 0.06 0.62C0.06 0.84 0.26 1 0.5 1C0.74 1 0.94 0.84 0.94 0.62C0.94 0.38 0.5 0 0.5 0Z" />
+          </clipPath>
+        </defs>
+      </svg>
+
+      <div className="mx-auto flex max-w-[1440px] flex-col-reverse items-center justify-center gap-10 px-5 pt-24 pb-24 md:px-8 md:pt-32 md:pb-32 lg:flex-row lg:items-center lg:gap-16 lg:px-12">
+        <h2 className="max-w-[14ch] shrink-0 text-center font-display text-[clamp(2rem,4.4vw,4.2rem)] leading-[0.96] font-medium tracking-[-0.03em] lg:text-left">
           <span className="block">Le sang ne se stocke</span>
           <span className="block text-silver">pas longtemps.</span>
         </h2>
 
-        <div className="reserve-mosaic relative aspect-[32/40] w-full max-w-[22rem] self-start lg:max-w-[26rem] lg:self-center">
-          <svg
-            viewBox="0 0 32 40"
-            className="pointer-events-none absolute inset-0 h-full w-full"
-            aria-hidden="true"
-          >
-            <path
-              d="M16 2C16 2 4 16.2 4 24.5C4 31.4 9.4 37 16 37C22.6 37 28 31.4 28 24.5C28 16.2 16 2 16 2Z"
-              className="fill-blood/10"
-            />
-          </svg>
-          <ul className="absolute inset-0">
-          {RESERVES.map((item) => {
-            const pos = DROP_POS[item.group];
-            return (
-              <li
-                key={item.group}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={{ left: pos.left, top: pos.top, width: pos.size }}
-              >
-                <article
-                  className="reserve-tile relative aspect-square overflow-hidden rounded-full bg-white"
-                  aria-label={`${item.group}, ${LEVEL_LABEL[item.level]}`}
-                >
-                  <div
+        <div className="reserve-mosaic flex w-full max-w-[22rem] shrink-0 flex-col items-center lg:max-w-[26rem]">
+          {DROP_ROWS.map((row, rowIndex) => (
+            <ul
+              key={row.join("-")}
+              className={cn(
+                "flex items-start justify-center gap-1.5 md:gap-2",
+                rowIndex > 0 && "-mt-3 md:-mt-4",
+                rowIndex === 0 && "mb-0",
+              )}
+            >
+              {row.map((group) => {
+                const item = BY_GROUP[group];
+                const tip = rowIndex === 0;
+                return (
+                  <li
+                    key={item.group}
                     className={cn(
-                      "reserve-wash absolute inset-x-0 bottom-0 origin-bottom",
-                      WASH[item.level],
+                      tip
+                        ? "w-[4.6rem] md:w-[5.6rem] lg:w-[6.2rem]"
+                        : "w-[5.15rem] md:w-[6.35rem] lg:w-[7rem]",
                     )}
-                    style={{ height: `${Math.round(item.fill * 100)}%` }}
-                  />
-                  <div className="relative z-10 flex h-full flex-col items-center justify-center px-1">
-                    <p className="font-display text-[1.05rem] leading-none font-medium tracking-[-0.05em] md:text-[1.35rem]">
-                      {item.group}
-                    </p>
-                    <p className="mt-1 text-[7px] tracking-[0.14em] text-ink/45 uppercase md:text-[8px]">
-                      {LEVEL_LABEL[item.level]}
-                    </p>
-                  </div>
-                </article>
-              </li>
-            );
-          })}
-          </ul>
+                  >
+                    <article
+                      className="reserve-tile relative aspect-[4/5] bg-white [clip-path:url(#blood-drop)]"
+                      aria-label={`${item.group}, ${LEVEL_LABEL[item.level]}`}
+                    >
+                      <div
+                        className={cn(
+                          "reserve-wash absolute inset-x-0 bottom-0 origin-bottom",
+                          WASH[item.level],
+                        )}
+                        style={{ height: `${Math.round(item.fill * 100)}%` }}
+                      />
+                      <div className="relative z-10 flex h-full flex-col items-center justify-center pt-[28%]">
+                        <p
+                          className={cn(
+                            "font-display leading-none font-medium tracking-[-0.05em]",
+                            tip
+                              ? "text-[0.95rem] md:text-[1.15rem]"
+                              : "text-[1.05rem] md:text-[1.35rem]",
+                          )}
+                        >
+                          {item.group}
+                        </p>
+                        <p className="mt-1 text-[6px] tracking-[0.12em] text-ink/45 uppercase md:text-[8px]">
+                          {LEVEL_LABEL[item.level]}
+                        </p>
+                      </div>
+                    </article>
+                  </li>
+                );
+              })}
+            </ul>
+          ))}
         </div>
       </div>
     </section>

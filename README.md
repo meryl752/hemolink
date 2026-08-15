@@ -71,6 +71,12 @@ npm run build
 npm start
 ```
 
+## Déploiement
+
+Production : [hemolink-steel.vercel.app](https://hemolink-steel.vercel.app)
+
+Le projet Vercel `hemolink` est relié au dépôt GitHub. Un push sur `main` déclenche le build et la mise en production.
+
 ## Accessibilité
 
 - Lien d’évitement, `lang="fr"`, focus visible
@@ -82,4 +88,4 @@ npm start
 
 - Code : ce dépôt
 - Méthodologie IA : [`PROMPTS.md`](./PROMPTS.md)
-- Déploiement : Vercel / Netlify (URL à renseigner après mise en ligne)
+- Déploiement : [hemolink-steel.vercel.app](https://hemolink-steel.vercel.app)
