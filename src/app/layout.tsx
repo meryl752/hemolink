@@ -1,5 +1,5 @@
 import { Fraunces, Outfit } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { Grain } from "@/components/layout/Grain";
 import { Header } from "@/components/layout/Header";
@@ -18,6 +18,10 @@ const outfit = Outfit({
   variable: "--font-outfit",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#f7f5f3",
+};
 
 export const metadata: Metadata = {
   title: "HemoLink — Vous avez déjà tout ce qu’il faut",

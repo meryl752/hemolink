@@ -4,6 +4,24 @@ Landing page informative sur le don de sang — **Figma to Code Challenge, édit
 
 > *Vous avez déjà tout ce qu’il faut.*
 
+[Live](https://hemolink-steel.vercel.app) · éligibilité, centres, 45 minutes.
+
+<p align="center">
+  <img src="public/captures/hero-desktop.png" alt="Hero desktop — formulaire d’éligibilité et titre" width="900" />
+</p>
+
+<p align="center">
+  <img src="public/captures/parcours-desktop.png" alt="Parcours du don en 45 minutes — avant, prélèvement, soins, après" width="900" />
+</p>
+
+<p align="center">
+  <img src="public/captures/hero-mobile.png" alt="Hero mobile" width="240" />
+  &nbsp;
+  <img src="public/captures/eligibilite-mobile.png" alt="Critères d’éligibilité et recherche de centres, mobile" width="240" />
+  &nbsp;
+  <img src="public/captures/parcours-mobile.png" alt="Parcours du don, mobile" width="240" />
+</p>
+
 HemoLink n’est pas une campagne de culpabilité. C’est une ressource pour les adultes qui n’ont jamais donné : trop d’inconnues, trop d’idées reçues, pas assez de clarté. La page répond à trois questions, dans cet ordre :
 
 1. **Puis-je donner ?**
@@ -40,7 +58,7 @@ Le brief interdit une page techniquement parfaite mais froide. Le parti pris est
 | C2 | Trois critères généraux (âge, poids, délai) |
 | C3 | Simulateur d’éligibilité (âge, poids, sexe, dernier don) |
 | C4–C5 | Parcours 45 min + conseils avant / pendant / après |
-| C6 | Annuaire de 8 centres, recherche et filtres |
+| C6 | Annuaire de 10 centres, recherche et filtres |
 | C7 | Réserves par groupe sanguin (niveaux illustratifs) |
 | C8 | FAQ & idées reçues, navigation clavier |
 

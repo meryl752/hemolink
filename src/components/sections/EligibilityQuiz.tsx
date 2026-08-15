@@ -317,11 +317,6 @@ export function EligibilityForm({ className }: { className?: string }) {
           </p>
         )}
       </div>
-
-      <p className="mt-8 text-[13px] leading-snug text-ink/40">
-        Seul un entretien médical professionnel peut confirmer l’aptitude au
-        don.
-      </p>
     </form>
   );
 }

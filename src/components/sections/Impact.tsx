@@ -130,7 +130,7 @@ export function Impact() {
 
         <div
           ref={scroller}
-          className="impact-scroller mt-14 w-full min-w-0 max-w-[100vw] snap-x snap-proximity overflow-x-auto overscroll-x-contain pb-6 scroll-px-5 md:scroll-px-8 lg:overflow-hidden lg:overscroll-auto lg:pb-32 lg:snap-none lg:scroll-px-0"
+          className="impact-scroller mt-14 w-full min-w-0 max-w-[100vw] snap-x snap-proximity overflow-x-auto overflow-y-hidden pb-6 scroll-px-5 md:scroll-px-8 lg:overflow-hidden lg:pb-32 lg:snap-none lg:scroll-px-0"
         >
           <div
             ref={track}

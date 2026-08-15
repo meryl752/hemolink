@@ -12,3 +12,5 @@ Photos de substitution (aucune vue libre de l’entrée trouvée) :
 - hz-ouidah.jpg — générée, Hôpital de Zone de Ouidah
 - tanguieta.jpg — générée, Hôpital Saint Jean de Dieu de Tanguiéta
   (le fichier Wikimedia « Face de l'hopital St Jean De Dieu de Tanguiéta.jpg » n’est pas une vue de l’hôpital)
+- chd-zou.jpg — générée, CHD Zou-Collines, Abomey
+- hz-natitingou.jpg — générée, Hôpital de Zone de Natitingou

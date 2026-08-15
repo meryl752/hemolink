@@ -47,9 +47,7 @@ export function Hero() {
       const mm = gsap.matchMedia();
 
       mm.add("(max-width: 1023px)", () => {
-        const lines = gsap.utils.toArray<HTMLElement>(
-          ".hero-intro-line > span, .hero-intro-b-line > span",
-        );
+        const lines = gsap.utils.toArray<HTMLElement>(".hero-intro-line > span");
         if (lines.length) {
           gsap.from(lines, {
             yPercent: 115,
@@ -172,8 +170,20 @@ export function Hero() {
 
   return (
     <section id="hero" ref={root} className="relative bg-hero">
-      <div className="hero-intro flex min-h-svh flex-col justify-center gap-16 px-5 lg:hidden md:px-8">
-        <h1 className="w-full text-left font-display text-[min(3.15rem,calc((100vw-2.5rem)/10.6))] leading-[0.94] font-medium tracking-[-0.035em]">
+      <div className="hero-intro relative min-h-svh overflow-hidden bg-hero lg:hidden">
+        <div className="hero-intro-photo pointer-events-none absolute inset-0">
+          <Image
+            src="/hero/medecin-2.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[52%_12%]"
+            aria-hidden="true"
+          />
+        </div>
+
+        <h1 className="absolute bottom-10 left-8 z-10 w-[calc(100%-4rem)] text-left font-display text-[min(3.5rem,calc((100vw-4rem)/9.5))] leading-[0.94] font-medium tracking-[-0.035em] md:bottom-12 md:left-12">
           <span className="hero-intro-line block overflow-hidden">
             <span className="block whitespace-nowrap text-ink">Votre premier</span>
           </span>
@@ -188,25 +198,11 @@ export function Hero() {
             </span>
           </span>
         </h1>
-
-        <p className="hero-intro-b mt-6 w-full text-right font-display text-[min(3.15rem,calc((100vw-2.5rem)/10.6))] leading-[0.94] font-medium tracking-[-0.035em] text-ink">
-          <span className="hero-intro-b-line block overflow-hidden">
-            <span className="block whitespace-nowrap">Ce geste simple</span>
-          </span>
-          <span className="hero-intro-b-line block overflow-hidden">
-            <span className="block whitespace-nowrap">peut déjà</span>
-          </span>
-          <span className="hero-intro-b-line mt-[0.08em] block overflow-hidden">
-            <span className="hero-silver block whitespace-nowrap">
-              sauver des vies.
-            </span>
-          </span>
-        </p>
       </div>
 
       <div className="max-lg:min-h-0 min-h-[100svh] lg:h-[340vh]">
         <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden max-lg:min-h-0 max-lg:overflow-visible lg:sticky lg:top-0 lg:h-svh">
-          <div className="hero-photo hero-photo-mask pointer-events-none absolute top-0 right-0 z-0 h-full w-[min(62vw,820px)] max-lg:relative max-lg:right-auto max-lg:h-[48svh] max-lg:w-full max-lg:overflow-hidden">
+          <div className="hero-photo hero-photo-mask pointer-events-none absolute top-0 right-0 z-0 h-full w-[min(62vw,820px)] max-lg:relative max-lg:right-auto max-lg:h-[52svh] max-lg:w-full max-lg:overflow-hidden">
             <div className="hero-img-a absolute inset-0">
               <Image
                 src="/hero/medecin-a.png"
@@ -222,7 +218,7 @@ export function Hero() {
                 fill
                 priority
                 sizes="100vw"
-                className="object-cover object-[50%_30%] lg:hidden"
+                className="object-cover object-[50%_42%] lg:hidden"
               />
             </div>
             <div className="hero-img-b absolute inset-0 opacity-0 max-lg:hidden">
@@ -236,14 +232,14 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="hero-front pointer-events-none relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-end px-5 pb-10 max-lg:min-h-0 max-lg:-mt-1 max-lg:items-stretch max-lg:pb-16 md:px-8 lg:absolute lg:inset-0 lg:px-12 lg:pb-16">
+          <div className="hero-front pointer-events-none relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-end px-5 pb-10 max-lg:min-h-0 max-lg:-mt-14 max-lg:items-stretch max-lg:pb-16 md:px-8 lg:absolute lg:inset-0 lg:px-12 lg:pb-16">
             <div className="hero-stack flex w-max max-w-full flex-col items-start gap-12 max-lg:w-full max-lg:gap-0 lg:gap-14">
               <div className="pointer-events-auto max-lg:w-full">
                 <EligibilityForm />
               </div>
 
               <div className="relative max-lg:hidden">
-                <h1 className="hero-copy max-w-full font-display text-[clamp(3.15rem,7.8vw,6.4rem)] leading-[0.94] font-medium tracking-[-0.03em]">
+                <h1 className="hero-copy max-w-full font-display text-[clamp(3.4rem,8.5vw,7.05rem)] leading-[0.94] font-medium tracking-[-0.03em]">
                   <span className="hero-title-ink block text-ink">
                     Votre premier
                     <br />
