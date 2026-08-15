@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-fraunces), "Fraunces", serif;
+  --font-sans: var(--font-outfit), "Outfit", sans-serif;
+
+  --color-silver: #a8a8a8;
+  --color-navy: #0f172a;
+  --color-hero: #f7f5f3;
+  --color-paper: #f4ede4;
+  --color-paper-2: #ebe2d6;
+  --color-foam: #fff9f4;
+  --color-ink: #1a1012;
+  --color-ink-soft: #4a3538;
+  --color-blood: #b91c2c;
+  --color-blood-deep: #6b0f18;
+  --color-vein: #8f3d4a;
+  --color-gold: #c9a36a;
+  --color-blush: #f0d5ce;
+  --color-mist: #e8dcd3;
+  --color-night: #12080a;
+  --color-night-2: #1c0d10;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    background: var(--color-hero);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-hero);
+    color: var(--color-ink);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-blood);
+    color: var(--color-foam);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blood);
+    outline-offset: 3px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+.hero-sang,
+.hero-sang * {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.018em var(--color-blood);
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    display: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.veil-path {
+  fill: none;
+  stroke: var(--color-blood);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.liquid {
+  animation: wave 6s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    d: path("M0,20 Q20,8 40,20 T80,20 T120,20 V60 H0 Z");
+  }
+  50% {
+    d: path("M0,20 Q20,32 40,20 T80,20 T120,20 V60 H0 Z");
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2.8s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring,
+  .liquid {
+    animation: none;
+  }
+
+  .faq-vein-trail {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.hero-silver {
+  color: var(--color-silver);
+}
+
+.hero-photo-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.18) 10%,
+    #000 24%,
+    #000 76%,
+    rgba(0, 0, 0, 0.18) 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.18) 10%,
+    #000 24%,
+    #000 76%,
+    rgba(0, 0, 0, 0.18) 90%,
+    transparent 100%
+  );
+}
+
+@media (max-width: 1023px) {
+  .hero-photo-mask {
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      #000 0%,
+      #000 91%,
+      rgba(0, 0, 0, 0.72) 96%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      #000 0%,
+      #000 91%,
+      rgba(0, 0, 0, 0.72) 96%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+  }
+}
+
+.impact-card-photo {
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.55) 62%,
+    rgba(0, 0, 0, 0.12) 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.55) 62%,
+    rgba(0, 0, 0, 0.12) 82%,
+    transparent 100%
+  );
+}
+
+.impact-product::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  border: 2px solid color-mix(in srgb, var(--color-paper-2) 85%, var(--color-ink) 15%);
+  border-top-color: transparent;
+  -webkit-mask-image: linear-gradient(
+    to top,
+    #000 0%,
+    #000 36%,
+    transparent 72%
+  );
+  mask-image: linear-gradient(to top, #000 0%, #000 36%, transparent 72%);
+}
+
+.center-scroller {
+  scrollbar-width: none;
+}
+
+.faq-vein-trail {
+  stroke: var(--color-blood);
+  opacity: 0.9;
+  stroke-dasharray: 0.16 0.84;
+  animation: faq-vein-flow 6.8s linear infinite;
+}
+
+@keyframes faq-vein-flow {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+.center-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.quiz-screen button,
+.quiz-screen a,
+.quiz-screen input {
+  outline: none;
+}
+
+.quiz-screen button:focus-visible,
+.quiz-screen a:focus-visible,
+.quiz-screen input:focus-visible {
+  outline: none;
+}
+
+.quiz-screen input[type="number"] {
+  appearance: textfield;
+}
+
+.quiz-screen input[type="number"]::-webkit-outer-spin-button,
+.quiz-screen input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}

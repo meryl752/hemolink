@@ -1,0 +1,11 @@
+Photographies Unsplash / Pexels (licence libre) :
+
+- medecin-a.png — portrait studio, fond crème (généré)
+- medecin-mobile.png — même portrait, regard baissé, avant-bras sur la carte (généré, mobile only)
+- medecin-2.png — portrait studio, fond crème (généré)
+- donor-sleeves.png — mains / t-shirt manches longues crème, fond studio (généré)
+- donor-palm.png — une main, paume ouverte, t-shirt crème, fond studio (généré)
+- donor-grip.png — une main en prise, t-shirt crème, fond studio (généré)
+- eligibilite.jpg — portrait, Unsplash (photo-1544005313-94ddf0286df2)
+- lieu.jpg — hall médical, Unsplash (photo-1519494026892-80bbd2d6fd0d)
+- deroule.jpg — entretien médical, Unsplash (photo-1532938911079-1b06ac7ceec7)

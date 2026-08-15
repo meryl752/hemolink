@@ -1,0 +1,175 @@
+Note : Les challengers sont libres de choisir le nom de leur projet (le nom « HemoLink » est utilisé ici à titre d'exemple).
+
+Figma to Code Challenge — Édition 4
+
+« Un sujet, une IA, votre instinct »
+
+
+Objectif : Concevoir et développer HemoLink, une landing page dédiée à l'information sur le don de sang.
+
+Pour cette édition, vous partez d'une page blanche : aucune maquette n'est fournie. Il vous appartient de définir la stratégie produit, la structure narrative, l'identité visuelle et l'implémentation technique. L'outil d'IA de votre choix sera votre collaborateur privilégié tout au long du processus.
+
+Le véritable enjeu réside dans votre capacité de pilotage. Si une IA peut générer une page générique en quelques minutes, nous évaluerons ici la pertinence de vos arbitrages : quels éléments mettre en avant ? Lesquels écarter ? Comment affiner et challenger les propositions de l'IA pour créer une expérience unique ?
+
+Vision et objectifs de la page
+
+HemoLink doit s'imposer comme une ressource de référence pour les futurs donneurs. La page est purement informative : aucune transaction, aucun téléchargement ni création de compte ne sont requis.
+
+L'objectif principal est qu'un visiteur n'ayant jamais sauté le pas reparte avec trois certitudes : son éligibilité, le lieu de rendez-vous et le déroulement de l'expérience.
+
+Le public cible se compose d'adultes novices, souvent freinés par un manque d'information ou des appréhensions (douleur, temps requis, organisation). La page doit donc adopter une approche rassurante et pédagogique pour déconstruire ces idées reçues.
+
+Une landing page techniquement parfaite mais froide, qui ne répondrait pas aux inquiétudes émotionnelles des utilisateurs, serait considérée comme hors sujet.
+Cadre et contraintes
+
+Si le fond est strictement encadré par le brief, la forme et l'expression créative sont entièrement libres.
+
+Contenus obligatoires
+
+Les informations suivantes doivent impérativement figurer sur la page. Leur hiérarchie, leur traitement graphique et leur intégration narrative dépendent de votre parti pris éditorial.
+
+
+Réf.
+Section
+Objectif de compréhension
+C1
+Pourquoi donner
+L'impact concret du don et les enjeux de santé publique
+C2
+Qui peut donner
+Synthèse claire des critères d'éligibilité généraux
+C3
+Test d'éligibilité
+Outil permettant à l'utilisateur de vérifier sa situation propre
+C4
+Déroulement du don
+Le parcours étape par étape et la durée totale
+C5
+Préparation au don
+Conseils pour l'avant, le pendant et l'après (documents, hydratation...)
+C6
+Où donner
+Cartographie ou liste des centres de transfusion
+C7
+État des réserves
+Besoins actuels par groupe sanguin
+C8
+FAQ & Idées reçues
+Réponses aux craintes et interrogations courantes
+
+
+
+Note : La fusion de sections est autorisée (ex: regrouper le déroulement et la préparation) tant que l'information reste exhaustive et accessible.
+
+Répertoire des centres de transfusion
+
+C'est la fonctionnalité centrale. Chaque établissement répertorié doit présenter :
+- Nom et nature de l'établissement ;
+
+- Adresse complète et localisation ;
+- Horaires d'ouverture et statut actuel (ouvert/fermé) ;
+- Coordonnées de contact ;
+- Types de dons acceptés (sang total, plasma, plaquettes) ;
+- Modalités d'accueil (avec ou sans rendez-vous).
+
+Le projet doit inclure un minimum de 8 centres répartis sur plusieurs villes afin de permettre une évaluation pertinente des fonctions de recherche et de filtrage.
+
+Fonctionnalités et comportements attendus
+
+- Simulateur d'éligibilité fonctionnel : calcul basé sur l'âge, le poids et la date du dernier don. Le système doit indiquer clairement le statut (éligible, non éligible avec motif, ou date de prochaine éligibilité).
+- Exploration des centres : moteur de recherche ou filtres par ville, type de don ou disponibilité (doit être opérationnel).
+- Accessibilité : navigation au clavier fluide (FAQ, boutons, formulaires) avec focus visuel explicite.
+- Gestion des états d'interface : traitement des états de chargement, d'absence de résultat et des erreurs de saisie.
+
+Contraintes techniques
+
+- Responsive Design : optimisation de 390px à 1440px sans rupture visuelle ni bug d'affichage.
+- Stack technologique libre : React, Vue, Astro, HTML/CSS, etc. Le choix vous appartient.
+- Architecture : pas de backend requis, l'utilisation de données statiques locales est préconisée.
+- Originalité : l'utilisation de bibliothèques (shadcn, Radix...) est autorisée, mais l'identité visuelle doit être une création originale (pas de thèmes préconçus).
+- Usage de l'IA : l'assistance par IA est non seulement autorisée mais encouragée comme levier de productivité.
+
+
+Livrables attendus
+
+Élément
+Description
+Dépôt GitHub public
+Code source complet et structuré
+URL de déploiement
+Site accessible en ligne (Vercel, Netlify, etc.)
+README.md
+Présentation du projet, stack et partis pris de conception
+
+
+Précisions sur le fichier PROMPTS.md
+
+Ce document est essentiel pour comprendre votre méthodologie :
+
+Le fichier PROMPTS.md
+
+- Outils d'IA sollicités ;
+
+- Séquence des prompts significatifs ;
+- Ajustements manuels effectués (quoi et pourquoi) ;
+- Limites rencontrées avec l'outil.
+
+Nous privilégions l'honnêteté intellectuelle à l'exhaustivité technique. L'absence de ce fichier entraînera une note de 0 dans la catégorie correspondante.
+
+Annexe  Algorithme d'éligibilité
+
+À implémenter dans la vérification d'éligibilité.
+
+Un profil est considéré comme éligible si tous les critères suivants sont validés :
+
+- Âge : entre 18 et 65 ans révolus ;
+- Poids : minimum 50 kg ;
+- Délai post-don : minimum 3 mois pour un homme, 4 mois pour une femme.
+
+Cas particuliers à gérer :
+
+- Aucun don antérieur → condition de délai considérée comme remplie
+- Délai non écoulé → afficher la date à partir de laquelle le don sera possible
+- Âge ou poids hors critères → message explicite indiquant le critère bloquant
+
+Note importante : Ces règles sont simplifiées pour les besoins du challenge. La page doit obligatoirement mentionner que seul un entretien médical professionnel peut confirmer l'aptitude au don.
+
+
+
+
+
+
+
+
+Règles du challenges 
+ Grille de notation
+Évaluation individuelle — chaque participant soumet son projet et dispose de sa propre fiche de notation
+
+100 points
+Catégorie	Points
+1. Fidélité au brief	20
+2. UX/UI & Cohérence	15
+3. Qualité technique	20
+4. Performance & A11y	15
+5. Créativité & Valeur	10
+6. Processus & Usage IA	10
+7. Vote du Public	10
+Total	100
+Méthodologie d’évaluation
+Pour garantir à la fois la rapidité et la pertinence, la notation est segmentée selon plusieurs niveaux d’intervention.
+
+Automatisation pure
+35 pts
+Le code, la performance (Lighthouse) et l’accessibilité sont notés via des outils automatisés.
+
+Approche hybride
+35 pts
+L’IA analyse la conformité fonctionnelle et visuelle, permettant au jury de se concentrer sur la pertinence produit.
+
+Expertise humaine
+20 pts
+Le jury conserve la main sur les aspects qualitatifs (originalité, usage des outils d’IA) mais aussi l’application des réflexes de collaboration : readme, documentation, licence, issues, bonnes pratiques git.
+
+Choix du public
+10 pts
+Le public analyse les créations des différents candidats et vote : les points sont distribués en fonction des coups de cœur.
