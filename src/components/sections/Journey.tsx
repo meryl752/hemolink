@@ -5,45 +5,49 @@ const PHASES = [
     id: "avant",
     title: "Avant",
     body: "Dormez, un vrai repas, beaucoup d’eau. Une pièce d’identité le jour J — sans elle, pas de don.",
-    image: "/hero/lieu.jpg",
-    imageAlt: "Hall d’un centre de don",
+    image: "/journey/avant.jpg",
+    imageAlt: "Un vrai repas avant le don",
     className:
       "static md:absolute md:top-[6%] md:left-[2%] md:max-w-[28rem] lg:top-[8%] lg:left-[3%]",
     align: "end",
     imageClass: "aspect-[4/5] w-full md:w-[9.5rem] lg:w-[12rem]",
+    imageFit: "object-cover object-[50%_60%]",
   },
   {
     id: "prelevement",
     title: "Prélèvement",
     body: "Une dizaine de minutes allongé. L’équipe reste là : dites-le si ça cloche. Vous pouvez arrêter à tout moment.",
-    image: "/hero/deroule.jpg",
-    imageAlt: "Prélèvement au centre de don",
+    image: "/journey/prelevement.jpg",
+    imageAlt: "Bras au repos pendant le don, pansement en place",
     className:
       "static md:absolute md:bottom-[7%] md:left-[6%] md:max-w-[30rem] lg:bottom-[8%] lg:left-[9%]",
     align: "end",
     imageClass: "aspect-[3/4] w-full md:w-[12rem] lg:w-[15rem]",
+    imageFit: "object-cover object-[45%_35%]",
   },
   {
     id: "soins",
     title: "Soins",
     body: "L’infirmier comprime, pose le pansement, et s’assure que vous tenez bien. Vous n’avez rien à gérer seul.",
-    image: "/hero/medecin-2.png",
-    imageAlt: "Soins après le prélèvement",
+    image: "/journey/soins.jpg",
+    imageAlt: "Compresse posée sur le bras après le prélèvement",
     className:
       "static md:absolute md:top-[4%] md:right-[2%] md:max-w-[30rem] lg:top-[5%] lg:right-[4%]",
     align: "end",
     imageClass: "aspect-[3/4] w-full md:w-[13rem] lg:w-[17rem]",
+    imageFit: "object-cover object-[55%_50%]",
   },
   {
     id: "apres",
     title: "Après",
     body: "Quinze minutes de collation. Gardez le pansement deux heures, hydratez-vous, et laissez le sport pour le lendemain.",
-    image: "/hero/medecin-a.png",
-    imageAlt: "Temps de repos après le don",
+    image: "/journey/apres.jpg",
+    imageAlt: "Jus d’orange pour la collation après le don",
     className:
       "static md:absolute md:right-[8%] md:bottom-[7%] md:max-w-[26rem] lg:right-[11%] lg:bottom-[9%]",
     align: "end",
     imageClass: "aspect-square w-full md:w-[8rem] lg:w-[10rem]",
+    imageFit: "object-cover object-center",
   },
 ] as const;
 
@@ -51,8 +55,8 @@ export function Journey() {
   return (
     <section id="parcours" className="bg-hero text-ink">
       <div className="relative mx-auto max-w-[1440px] px-5 py-24 md:min-h-[56rem] md:px-8 md:py-32 lg:min-h-[62rem] lg:px-12">
-        <div className="relative z-10 mx-auto max-w-[34rem] md:absolute md:top-1/2 md:left-1/2 md:max-w-[22rem] md:-translate-x-1/2 md:-translate-y-1/2 lg:max-w-[26rem]">
-          <h2 className="font-display text-[clamp(1.55rem,2.6vw,2.35rem)] leading-[1.08] font-medium tracking-[-0.03em]">
+        <div className="relative z-10 mx-auto max-w-[34rem] md:absolute md:top-1/2 md:left-1/2 md:max-w-[26rem] md:-translate-x-1/2 md:-translate-y-1/2 lg:max-w-[30rem]">
+          <h2 className="font-display text-[clamp(1.9rem,3.4vw,2.95rem)] leading-[1.08] font-medium tracking-[-0.03em] max-lg:text-[3.45rem]">
             <span className="block text-silver">Une expérience</span>
             <span className="mt-[0.04em] block text-ink">de 45 min</span>
           </h2>
@@ -72,7 +76,7 @@ export function Journey() {
                   alt={phase.imageAlt}
                   fill
                   sizes="17rem"
-                  className="object-cover"
+                  className={phase.imageFit}
                 />
               </figure>
               <div className="min-w-0 md:max-w-[16rem] lg:max-w-[18rem]">

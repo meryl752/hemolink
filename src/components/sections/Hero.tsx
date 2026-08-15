@@ -31,12 +31,14 @@ export function Hero() {
       const front = root.current?.querySelector<HTMLElement>(".hero-front");
       if (
         !title ||
+        !silver ||
         !stack ||
         !copy ||
         !photo ||
         !imgA ||
         !imgB ||
         !copyMid ||
+        !midLines ||
         !copyB ||
         !front
       )

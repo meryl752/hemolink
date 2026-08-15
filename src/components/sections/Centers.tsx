@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import {
   CENTERS,
@@ -23,26 +23,50 @@ import {
   todayHoursLabel,
 } from "@/lib/utils";
 
+function useDebouncedValue(value: string, delay: number) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setDebounced(value), delay);
+    return () => window.clearTimeout(id);
+  }, [value, delay]);
+
+  return debounced;
+}
+
 export function Centers() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<{
     center: Center;
     km: number | null;
   } | null>(null);
-  const deferredQuery = useDeferredValue(query);
-  const searching = query !== deferredQuery;
-  const looking = deferredQuery.trim().length > 0;
+  const committed = useDebouncedValue(query, 420);
+  const looking = committed.trim().length > 0;
+  const [panelOpen, setPanelOpen] = useState(false);
 
-  const results = useMemo(
-    () =>
-      filterCenters(CENTERS, {
-        query: deferredQuery,
-        city: "all",
-        type: "all",
-        openOnly: false,
-      }).map((center) => ({ center, km: null as number | null })),
-    [deferredQuery],
-  );
+  const results = useMemo(() => {
+    if (!committed.trim()) return [];
+    return filterCenters(CENTERS, {
+      query: committed,
+      city: "all",
+      type: "all",
+      openOnly: false,
+    }).map((center) => ({ center, km: null as number | null }));
+  }, [committed]);
+
+  const [shown, setShown] = useState(results);
+  const display = looking ? results : shown;
+
+  useEffect(() => {
+    if (looking) {
+      setPanelOpen(true);
+      setShown(results);
+      return;
+    }
+    setPanelOpen(false);
+    const id = window.setTimeout(() => setShown([]), 560);
+    return () => window.clearTimeout(id);
+  }, [looking, results]);
 
   useEffect(() => {
     if (!selected) return;
@@ -57,10 +81,6 @@ export function Centers() {
       document.removeEventListener("keydown", onKey);
     };
   }, [selected]);
-
-  const reset = () => {
-    setQuery("");
-  };
 
   return (
     <section id="centres" className="relative overflow-x-clip bg-hero text-ink">
@@ -86,54 +106,40 @@ export function Centers() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Ville, nom, adresse…"
+                  placeholder="Rechercher une ville, une commune…"
                   className="relative z-10 w-full rounded-full bg-white py-4 pr-6 pl-14 text-[16px] text-ink outline-none placeholder:text-ink/45 md:py-[1.15rem] md:text-[17px]"
                 />
               </label>
             </form>
           </div>
 
-        {looking ? (
-          <p className="mt-8 text-[13px] text-ink/40" aria-live="polite">
-            {searching
-              ? "Recherche…"
-              : `${results.length} centre${results.length > 1 ? "s" : ""}`}
-          </p>
-        ) : null}
-
-        {!looking ? null : searching ? (
-          <div className="mt-8 flex gap-4 overflow-hidden" aria-hidden="true">
-            {Array.from({ length: 4 }).map((_, i) => (
+        <div className={`centers-results ${panelOpen ? "is-open" : ""}`}>
+          <div>
+            <div className="mt-8 rounded-[1.75rem] bg-white px-5 py-6 md:mt-10 md:rounded-[2rem] md:px-8 md:py-8">
               <div
-                key={i}
-                className="h-64 w-[min(70vw,16rem)] shrink-0 animate-pulse rounded-[2rem] border border-ink/10 bg-white/40"
-              />
-            ))}
+                key={looking ? committed : "idle"}
+                className="centers-results-body"
+              >
+                <p className="text-[13px] text-ink/40" aria-live="polite">
+                  {`${display.length} centre${display.length > 1 ? "s" : ""}`}
+                </p>
+
+                {display.length === 0 ? (
+                  <div className="mt-6 flex justify-center px-4 py-4 text-center">
+                    <p className="max-w-[22ch] font-display text-[1.2rem] leading-[1.2] font-medium tracking-[-0.03em] md:text-[1.35rem]">
+                      Votre zone n’est pas encore prise en compte&nbsp;!
+                    </p>
+                  </div>
+                ) : (
+                  <CenterCarousel
+                    results={display}
+                    onOpen={(item) => setSelected(item)}
+                  />
+                )}
+              </div>
+            </div>
           </div>
-        ) : results.length === 0 ? (
-          <div className="mt-10">
-            <p className="font-display text-[1.85rem] leading-tight tracking-[-0.03em]">
-              Aucun centre ne correspond.
-            </p>
-            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
-              Essayez une autre ville, un nom de centre, ou une adresse.
-            </p>
-            <button
-              type="button"
-              className="mt-6 text-[15px] text-ink underline decoration-ink/25 underline-offset-4"
-              onClick={reset}
-            >
-              Effacer la recherche
-            </button>
-          </div>
-        ) : (
-          <>
-            <CenterCarousel
-              results={results}
-              onOpen={(item) => setSelected(item)}
-            />
-          </>
-        )}
+        </div>
 
         {selected ? (
           <CenterModal
@@ -195,7 +201,7 @@ function CenterCarousel({
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-5">
       <ul
         ref={scroller}
         className="center-scroller flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1"
@@ -251,22 +257,22 @@ function CenterCard({
     <button
       type="button"
       onClick={onOpen}
-      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-ink/10 text-left outline-none"
+      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-xl border border-ink/10 text-left outline-none"
       aria-haspopup="dialog"
     >
       <Image
         src={image}
         alt=""
         fill
-        sizes="16rem"
+        quality={90}
+        sizes="(max-width: 1023px) 70vw, 16rem"
         className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
       />
-      <div className="absolute inset-0 bg-hero/35" />
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-hero/90 via-hero/55 to-transparent px-3 pb-3 pt-10">
-        <h3 className="font-display text-[1.15rem] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[1.25rem]">
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent px-3 pb-3 pt-16">
+        <h3 className="font-display text-[1.15rem] leading-[1.08] font-medium tracking-[-0.03em] text-hero md:text-[1.25rem]">
           {center.name}
         </h3>
-        <p className="mt-1.5 text-[13px] text-ink-soft">
+        <p className="mt-1.5 text-[13px] text-hero/75">
           {center.city}
           {km !== null ? ` · ${formatKm(km)}` : ""}
         </p>
@@ -297,7 +303,7 @@ function CenterModal({
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-5 py-8">
       <button
         type="button"
-        className="absolute inset-0 bg-ink/55 backdrop-blur-2xl backdrop-saturate-50"
+        className="center-modal-backdrop absolute inset-0 bg-ink/55 backdrop-blur-2xl backdrop-saturate-50"
         aria-label="Fermer"
         onClick={onClose}
       />
@@ -305,19 +311,20 @@ function CenterModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`center-dialog-${center.id}`}
-        className="relative z-10 max-h-[90vh] w-full max-w-[34rem] overflow-y-auto bg-hero text-ink"
+        className="center-modal-card relative z-10 w-full max-w-[34rem]"
       >
-        <div className="relative h-52 w-full overflow-hidden md:h-64">
-          <Image
-            src={image}
-            alt={center.name}
-            fill
-            sizes="34rem"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-hero/25" />
-        </div>
-        <div className="px-6 py-6 md:px-8 md:py-8">
+        <div className="max-h-[90vh] overflow-y-auto rounded-[3rem] bg-hero text-ink">
+          <div className="relative h-52 w-full overflow-hidden md:h-64">
+            <Image
+              src={image}
+              alt={center.name}
+              fill
+              quality={90}
+              sizes="(max-width: 1023px) 100vw, 34rem"
+              className="object-cover"
+            />
+          </div>
+          <div className="px-6 py-6 md:px-8 md:py-8">
           <p className="text-[11px] tracking-[0.18em] text-ink/40 uppercase">
             {KIND_LABEL[center.kind]}
             {km !== null ? ` · ${formatKm(km)}` : ""}
@@ -369,19 +376,19 @@ function CenterModal({
               })}
           </ul>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href={mapsUrl(center)}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-[3.2rem] items-center bg-ink px-5 font-display text-[1.15rem] leading-none font-medium tracking-[-0.03em] text-hero"
+              className="inline-flex min-h-[3.1rem] items-center rounded-full bg-ink px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-hero transition-colors hover:bg-ink/85"
             >
               Itinéraire
             </a>
             {center.email ? (
               <a
                 href={`mailto:${center.email}`}
-                className="text-[15px] underline decoration-ink/20 underline-offset-4 hover:decoration-ink/60"
+                className="inline-flex min-h-[3.1rem] items-center rounded-full border border-ink/15 px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-ink transition-colors hover:border-ink/40 hover:bg-ink/[0.04]"
               >
                 Écrire
               </a>
@@ -389,12 +396,13 @@ function CenterModal({
             <button
               type="button"
               onClick={onClose}
-              className="ml-auto inline-flex items-center gap-2 text-[15px] text-ink/50"
+              className="ml-auto inline-flex min-h-[3.1rem] items-center gap-2 rounded-full px-5 font-display text-[1.05rem] leading-none font-medium tracking-[-0.03em] text-ink/55 transition-colors hover:bg-ink/[0.05] hover:text-ink"
             >
-              <Icon name="close" className="size-5" />
+              <Icon name="close" className="size-4" />
               Fermer
             </button>
           </div>
+        </div>
         </div>
       </div>
     </div>

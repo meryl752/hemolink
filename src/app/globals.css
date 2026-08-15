@@ -135,6 +135,16 @@
     animation: none;
     opacity: 0;
   }
+
+  .center-modal-backdrop,
+  .center-modal-card,
+  .centers-results-body {
+    animation: none;
+  }
+
+  .centers-results {
+    transition: none;
+  }
 }
 
 .hero-silver {
@@ -222,6 +232,39 @@
   scrollbar-width: none;
 }
 
+.centers-results {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.55s var(--ease-out-expo),
+    opacity 0.35s ease;
+}
+
+.centers-results.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.centers-results > * {
+  overflow: hidden;
+}
+
+.centers-results-body {
+  animation: centers-results-in 0.45s var(--ease-out-expo) both;
+}
+
+@keyframes centers-results-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .faq-vein-trail {
   stroke: var(--color-blood);
   opacity: 0.9;
@@ -237,6 +280,34 @@
 
 .center-scroller::-webkit-scrollbar {
   display: none;
+}
+
+.center-modal-backdrop {
+  animation: center-modal-backdrop 0.4s ease-out both;
+}
+
+.center-modal-card {
+  animation: center-modal-in 0.5s var(--ease-out-expo) both;
+}
+
+@keyframes center-modal-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes center-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .quiz-screen button,
