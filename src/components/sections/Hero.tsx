@@ -47,49 +47,18 @@ export function Hero() {
       const mm = gsap.matchMedia();
 
       mm.add("(max-width: 1023px)", () => {
-        const introInk = root.current?.querySelector<HTMLElement>(".hero-intro-ink");
-        const introSilver = root.current?.querySelector(".hero-intro-silver");
-        if (!introInk || !introSilver) return;
-
-        const introSang = introInk.querySelector(".hero-sang");
-        if (introSang) introSang.replaceWith(...Array.from(introSang.childNodes));
-
-        const introSplit = new SplitText(introInk, { type: "chars,words,lines" });
-        introSplit.words.forEach((word) => {
-          if (word.textContent?.trim() === "sang") {
-            word.classList.add("hero-sang");
-          }
-        });
-        introSplit.lines.forEach((line) => {
-          (line as HTMLElement).style.overflow = "hidden";
-          (line as HTMLElement).style.display = "block";
-        });
-
-        gsap
-          .timeline({ defaults: { ease: "editorial" } })
-          .from(introSplit.chars, {
+        const lines = gsap.utils.toArray<HTMLElement>(
+          ".hero-intro-line > span, .hero-intro-b-line > span",
+        );
+        if (lines.length) {
+          gsap.from(lines, {
             yPercent: 115,
-            rotateZ: 6,
-            stagger: 0.018,
+            rotateZ: 4,
+            stagger: 0.07,
             duration: 1.15,
-          })
-          .from(introSilver, { y: 24, autoAlpha: 0, duration: 0.9 }, "-=0.55");
-
-        const second = root.current?.querySelector<HTMLElement>(".hero-mobile-b");
-        if (second) {
-          gsap.from(second, {
-            y: 28,
-            autoAlpha: 0,
-            duration: 0.9,
             ease: "editorial",
-            scrollTrigger: {
-              trigger: second,
-              start: "top 86%",
-            },
           });
         }
-
-        return () => introSplit.revert();
       });
 
       mm.add("(min-width: 1024px)", () => {
@@ -203,21 +172,40 @@ export function Hero() {
 
   return (
     <section id="hero" ref={root} className="relative bg-hero">
-      <div className="hero-intro flex min-h-svh items-center px-5 lg:hidden md:px-8">
-        <h1 className="max-w-[18ch] text-left font-display text-[clamp(3.15rem,10.5vw,3.85rem)] leading-[0.94] font-medium tracking-[-0.03em]">
-          <span className="hero-intro-ink block text-ink">
-            Votre premier
-            <br />
-            don de <span className="hero-sang">sang</span>
+      <div className="hero-intro flex min-h-svh flex-col justify-center gap-16 px-5 lg:hidden md:px-8">
+        <h1 className="w-full text-left font-display text-[min(3.15rem,calc((100vw-2.5rem)/10.6))] leading-[0.94] font-medium tracking-[-0.035em]">
+          <span className="hero-intro-line block overflow-hidden">
+            <span className="block whitespace-nowrap text-ink">Votre premier</span>
           </span>
-          <span className="hero-intro-silver hero-silver mt-[0.08em] block">
-            en toute confiance !
+          <span className="hero-intro-line block overflow-hidden">
+            <span className="block whitespace-nowrap text-ink">
+              don de <span className="hero-sang">sang</span>
+            </span>
+          </span>
+          <span className="hero-intro-line mt-[0.08em] block overflow-hidden">
+            <span className="hero-silver block whitespace-nowrap">
+              en toute confiance !
+            </span>
           </span>
         </h1>
+
+        <p className="hero-intro-b mt-6 w-full text-right font-display text-[min(3.15rem,calc((100vw-2.5rem)/10.6))] leading-[0.94] font-medium tracking-[-0.035em] text-ink">
+          <span className="hero-intro-b-line block overflow-hidden">
+            <span className="block whitespace-nowrap">Ce geste simple</span>
+          </span>
+          <span className="hero-intro-b-line block overflow-hidden">
+            <span className="block whitespace-nowrap">peut déjà</span>
+          </span>
+          <span className="hero-intro-b-line mt-[0.08em] block overflow-hidden">
+            <span className="hero-silver block whitespace-nowrap">
+              sauver des vies.
+            </span>
+          </span>
+        </p>
       </div>
 
       <div className="max-lg:min-h-0 min-h-[100svh] lg:h-[340vh]">
-        <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden pt-24 max-lg:min-h-0 max-lg:overflow-visible max-lg:pt-0 lg:sticky lg:top-0 lg:h-svh">
+        <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden max-lg:min-h-0 max-lg:overflow-visible lg:sticky lg:top-0 lg:h-svh">
           <div className="hero-photo hero-photo-mask pointer-events-none absolute top-0 right-0 z-0 h-full w-[min(62vw,820px)] max-lg:relative max-lg:right-auto max-lg:h-[48svh] max-lg:w-full max-lg:overflow-hidden">
             <div className="hero-img-a absolute inset-0">
               <Image
@@ -248,19 +236,11 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="hero-front pointer-events-none relative z-20 mx-auto flex min-h-[calc(100svh-6rem)] max-w-[1440px] items-end px-5 pb-10 max-lg:min-h-0 max-lg:-mt-1 max-lg:items-stretch max-lg:pb-16 md:px-8 lg:absolute lg:inset-0 lg:px-12 lg:pb-16">
-            <div className="hero-stack flex w-max max-w-full flex-col items-start gap-12 max-lg:w-full max-lg:gap-8 lg:gap-14">
+          <div className="hero-front pointer-events-none relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-end px-5 pb-10 max-lg:min-h-0 max-lg:-mt-1 max-lg:items-stretch max-lg:pb-16 md:px-8 lg:absolute lg:inset-0 lg:px-12 lg:pb-16">
+            <div className="hero-stack flex w-max max-w-full flex-col items-start gap-12 max-lg:w-full max-lg:gap-0 lg:gap-14">
               <div className="pointer-events-auto max-lg:w-full">
                 <EligibilityForm />
               </div>
-
-              <p className="hero-mobile-b max-w-full text-left font-display text-[clamp(2.85rem,9.5vw,3.6rem)] leading-[0.94] font-medium tracking-[-0.03em] text-ink lg:hidden">
-                <span className="block">Un geste simple</span>
-                <span className="block">peut déjà</span>
-                <span className="hero-silver mt-[0.08em] block">
-                  sauver des vies.
-                </span>
-              </p>
 
               <div className="relative max-lg:hidden">
                 <h1 className="hero-copy max-w-full font-display text-[clamp(3.15rem,7.8vw,6.4rem)] leading-[0.94] font-medium tracking-[-0.03em]">
@@ -273,11 +253,10 @@ export function Hero() {
                     en toute confiance !
                   </span>
                 </h1>
-                <p className="hero-copy-b pointer-events-none absolute top-0 right-0 text-right font-display text-[clamp(3.2rem,7.2vw,6.1rem)] leading-[0.94] font-medium tracking-[-0.03em] text-ink opacity-0 max-lg:hidden">
-                  <span className="block whitespace-nowrap">Un geste simple</span>
-                  <span className="block whitespace-nowrap">peut déjà</span>
+                <p className="hero-copy-b pointer-events-none absolute top-0 right-0 text-right font-display text-[clamp(2.7rem,5.8vw,4.85rem)] leading-[0.94] font-medium tracking-[-0.03em] text-ink opacity-0 max-lg:hidden">
+                  <span className="block whitespace-nowrap">Ce geste simple</span>
                   <span className="hero-silver mt-[0.08em] block whitespace-nowrap">
-                    sauver des vies.
+                    peut déjà sauver des vies.
                   </span>
                 </p>
               </div>

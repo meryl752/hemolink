@@ -35,7 +35,7 @@ export function Faq() {
         <div className="relative mx-auto mt-6 max-w-[42rem]">
           <div className="faq-ring pointer-events-none absolute inset-0" aria-hidden="true" />
           <svg
-            className="pointer-events-none absolute inset-[3px] h-[calc(100%-6px)] w-[calc(100%-6px)] overflow-visible"
+            className="pointer-events-none absolute inset-[3px] hidden h-[calc(100%-6px)] w-[calc(100%-6px)] overflow-visible lg:block"
             aria-hidden="true"
           >
             <rect

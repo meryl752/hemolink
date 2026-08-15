@@ -4,7 +4,7 @@ const PHASES = [
   {
     id: "avant",
     title: "Avant",
-    body: "Dormez, un vrai repas, beaucoup d’eau. Une pièce d’identité le jour J — sans elle, pas de don.",
+    body: "Dormez, un vrai repas, beaucoup d’eau. Une pièce d’identité le jour J. Sans elle, pas de don.",
     image: "/journey/avant.jpg",
     imageAlt: "Un vrai repas avant le don",
     className:
@@ -37,7 +37,7 @@ const PHASES = [
   {
     id: "apres",
     title: "Après",
-    body: "Quinze minutes de collation. Gardez le pansement deux heures, hydratez-vous, et laissez le sport pour le lendemain.",
+    body: "Vous restez quinze minutes pour la collation. Gardez le pansement pendant un moment, et hydratez-vous.",
     image: "/journey/apres.jpg",
     imageAlt: "Jus d’orange pour la collation après le don",
     className:
@@ -51,10 +51,12 @@ export function Journey() {
   return (
     <section id="parcours" className="bg-hero text-ink">
       <div className="relative mx-auto max-w-[1440px] px-5 py-24 lg:min-h-[62rem] lg:px-12 lg:py-32 md:px-8 md:py-32">
-        <div className="relative z-10 mx-auto max-w-[34rem] lg:absolute lg:top-1/2 lg:left-1/2 lg:max-w-[30rem] lg:-translate-x-1/2 lg:-translate-y-1/2">
-          <h2 className="font-display text-[clamp(1.9rem,3.4vw,2.95rem)] leading-[1.08] font-medium tracking-[-0.03em] max-lg:text-[3.1rem]">
+        <div className="relative z-10 w-max max-w-full max-lg:mx-0 max-lg:w-full lg:absolute lg:top-1/2 lg:left-1/2 lg:mx-auto lg:-translate-x-1/2 lg:-translate-y-1/2">
+          <h2 className="text-left font-display text-[clamp(2rem,4.4vw,4.2rem)] leading-[0.96] font-medium tracking-[-0.03em] lg:text-right">
             <span className="block text-silver">Une expérience</span>
-            <span className="mt-[0.04em] block text-ink">de 45 min</span>
+            <span className="mt-[0.04em] block text-ink">
+              qui ne dure que 45 min
+            </span>
           </h2>
         </div>
 

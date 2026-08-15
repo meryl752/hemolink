@@ -123,7 +123,7 @@ export function Header() {
     <header
       ref={root}
       className={cn(
-        "pointer-events-none fixed inset-x-0 top-0 z-50 transition-[opacity,transform] duration-300 ease-out",
+        "pointer-events-none fixed inset-x-0 top-0 z-50 transition-[opacity,transform] duration-300 ease-out lg:hidden",
         hidden && !open && "-translate-y-4 opacity-0",
       )}
     >
@@ -152,7 +152,7 @@ export function Header() {
 
       <div
         className={cn(
-          "relative z-20 mx-auto flex max-w-[1440px] items-center gap-6 px-5 pt-11 pb-5 md:px-8 lg:px-12 lg:pt-14",
+          "relative z-20 mx-auto flex max-w-[1440px] items-center gap-6 px-5 pt-20 pb-5 md:px-8 lg:px-12 lg:pt-14",
           (!hidden || open) && "pointer-events-auto",
         )}
       >

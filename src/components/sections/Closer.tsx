@@ -1,7 +1,9 @@
+import { Logo } from "@/components/layout/Logo";
+
 export function Closer() {
   return (
     <section className="bg-hero text-ink">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-center px-5 py-24 md:px-8 md:py-32 lg:px-12">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-center px-5 pt-24 pb-12 md:px-8 md:pt-32 md:pb-16 lg:px-12">
         <p className="max-w-[18ch] text-center font-display text-[clamp(2.1rem,5vw,4.6rem)] leading-[1.08] font-medium tracking-[-0.03em]">
           Foncez, donnez du{" "}
           <span className="text-blood">sang</span>{" "}
@@ -24,6 +26,11 @@ export function Closer() {
             />
           </svg>{" "}
           pour sauver des vies.
+        </p>
+        <Logo compact className="mt-14 md:mt-16" />
+        <p className="mt-5 max-w-[34ch] text-center text-[13px] leading-snug text-ink/40">
+          Seul un entretien médical professionnel peut confirmer l’aptitude au
+          don.
         </p>
       </div>
     </section>

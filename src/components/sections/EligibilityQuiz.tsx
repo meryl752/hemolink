@@ -8,6 +8,7 @@ import {
   type Sex,
 } from "@/lib/eligibility";
 import { Icon } from "@/components/ui/Icon";
+import { Logo } from "@/components/layout/Logo";
 import { cn } from "@/lib/utils";
 
 type Step = "sex" | "age" | "weight" | "last" | "result";
@@ -109,6 +110,8 @@ export function EligibilityForm({ className }: { className?: string }) {
       )}
       aria-label="Test d’éligibilité"
     >
+      <Logo compact className="mb-6 hidden self-start lg:inline-flex" />
+
       {step !== "result" ? (
         <h2 className="font-display text-[clamp(1.85rem,2.4vw,2.35rem)] leading-[1.12] font-medium tracking-[-0.03em]">
           Utiliser ce formulaire pour tester votre aptitude à faire un don de
@@ -314,6 +317,11 @@ export function EligibilityForm({ className }: { className?: string }) {
           </p>
         )}
       </div>
+
+      <p className="mt-8 text-[13px] leading-snug text-ink/40">
+        Seul un entretien médical professionnel peut confirmer l’aptitude au
+        don.
+      </p>
     </form>
   );
 }

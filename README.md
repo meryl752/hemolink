@@ -40,7 +40,7 @@ Le brief interdit une page techniquement parfaite mais froide. Le parti pris est
 | C2 | Trois critères généraux (âge, poids, délai) |
 | C3 | Simulateur d’éligibilité (âge, poids, sexe, dernier don) |
 | C4–C5 | Parcours 45 min + conseils avant / pendant / après |
-| C6 | Annuaire de 10 centres, recherche et filtres |
+| C6 | Annuaire de 8 centres, recherche et filtres |
 | C7 | Réserves par groupe sanguin (niveaux illustratifs) |
 | C8 | FAQ & idées reçues, navigation clavier |
 

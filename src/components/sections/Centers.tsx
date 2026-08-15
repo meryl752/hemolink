@@ -43,6 +43,15 @@ export function Centers() {
   const committed = useDebouncedValue(query, 420);
   const looking = committed.trim().length > 0;
   const [panelOpen, setPanelOpen] = useState(false);
+  const [compactSearch, setCompactSearch] = useState(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setCompactSearch(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const results = useMemo(() => {
     if (!committed.trim()) return [];
@@ -106,8 +115,12 @@ export function Centers() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Rechercher une ville, une commune…"
-                  className="relative z-10 w-full rounded-full bg-white py-4 pr-6 pl-14 text-[16px] text-ink outline-none placeholder:text-ink/45 md:py-[1.15rem] md:text-[17px]"
+                  placeholder={
+                    compactSearch
+                      ? "Taper pour trouver un centre…"
+                      : "Taper pour trouver un centre près de chez vous…"
+                  }
+                  className="relative z-10 w-full rounded-full bg-white py-4 pr-6 pl-14 text-[16px] text-ink outline-none placeholder:text-ink/75 md:py-[1.15rem] md:text-[17px]"
                 />
               </label>
             </form>
