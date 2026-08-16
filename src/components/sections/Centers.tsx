@@ -178,6 +178,7 @@ export function Centers() {
               setDirectoryOpen(false);
               window.setTimeout(() => directoryTrigger.current?.focus(), 0);
             }}
+            onOpenCenter={(center) => setSelected({ center, km: null })}
           />
         ) : null}
 
@@ -196,6 +197,11 @@ export function Centers() {
 function formatKm(km: number) {
   if (km < 1) return `${Math.round(km * 1000)} m`;
   return `${km < 10 ? km.toFixed(1) : Math.round(km)} km`;
+}
+
+function centerLocality(center: Center) {
+  if (!center.postalCode || center.postalCode === center.city) return center.city;
+  return `${center.postalCode} ${center.city}`;
 }
 
 function CenterCarousel({
@@ -345,23 +351,76 @@ function CenterDetailCard({
   );
   const open = isClient ? isCenterOpen(center) : null;
   const hours = isClient ? todayHoursLabel(center) : "Horaires du jour";
+  const closedToday = hours.startsWith("Fermé");
+
+  const actions = (
+    <>
+      <a
+        href={mapsUrl(center)}
+        target="_blank"
+        rel="noreferrer"
+        className={cn(
+          "inline-flex min-h-[3.1rem] items-center justify-center rounded-full bg-ink px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-hero transition-colors hover:bg-ink/85",
+          !wide && "max-lg:w-full",
+          !wide && !center.email && "max-lg:col-span-2",
+        )}
+      >
+        Itinéraire
+      </a>
+      {center.email ? (
+        <a
+          href={`mailto:${center.email}`}
+          className={cn(
+            "inline-flex min-h-[3.1rem] items-center justify-center rounded-full border border-ink/15 px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-ink transition-colors hover:border-ink/40 hover:bg-ink/[0.04]",
+            !wide && "max-lg:w-full",
+          )}
+        >
+          Écrire
+        </a>
+      ) : null}
+      {onClose ? (
+        <button
+          type="button"
+          onClick={onClose}
+          className={cn(
+            "ml-auto inline-flex min-h-[3.1rem] items-center gap-2 rounded-full px-5 font-display text-[1.05rem] leading-none font-medium tracking-[-0.03em] text-ink/55 transition-colors hover:bg-ink/[0.05] hover:text-ink",
+            !wide && "max-lg:hidden",
+          )}
+        >
+          <Icon name="close" className="size-4" />
+          Fermer
+        </button>
+      ) : null}
+    </>
+  );
 
   return (
     <article
       className={cn(
-        "center-detail-card bg-hero text-ink",
+        "center-detail-card relative bg-hero text-ink",
         wide
           ? "flex h-full flex-col overflow-hidden rounded-[2rem] md:flex-row md:rounded-[2.5rem]"
-          : "flex max-h-[90vh] flex-col overflow-y-auto rounded-[3rem]",
+          : "flex max-h-[min(90dvh,52rem)] flex-col overflow-hidden rounded-[1.75rem] md:rounded-[3rem]",
       )}
       data-lenis-prevent
     >
+      {onClose && !wide ? (
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-3 z-20 flex size-11 items-center justify-center rounded-full bg-hero/92 text-ink lg:hidden"
+          aria-label="Fermer"
+        >
+          <Icon name="close" className="size-5" />
+        </button>
+      ) : null}
+
       <div
         className={cn(
           "relative shrink-0 overflow-hidden",
           wide
             ? "h-40 w-full md:h-auto md:w-[46%] md:min-w-[46%]"
-            : "h-52 w-full md:h-64",
+            : "aspect-[16/10] w-full",
         )}
       >
         <Image
@@ -376,7 +435,7 @@ function CenterDetailCard({
       <div
         className={cn(
           "flex min-h-0 flex-1 flex-col",
-          wide ? "px-5 py-5 md:px-8 md:py-7" : "px-6 py-6 md:px-8 md:py-8",
+          wide ? "px-5 py-5 md:px-8 md:py-7" : "centers-directory-list overflow-y-auto px-5 py-5 md:px-8 md:py-8",
         )}
       >
         <p className="text-[11px] tracking-[0.18em] text-ink/40 uppercase">
@@ -387,7 +446,7 @@ function CenterDetailCard({
           id={titleId}
           className={cn(
             "mt-2 font-display leading-[1.08] font-medium tracking-[-0.03em]",
-            wide ? "text-[1.55rem] md:text-[1.85rem]" : "text-[1.85rem]",
+            wide ? "text-[1.55rem] md:text-[1.85rem]" : "text-[1.55rem] md:text-[1.85rem]",
           )}
         >
           {center.name}
@@ -395,16 +454,24 @@ function CenterDetailCard({
         <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
           {center.address}
           <br />
-          {center.postalCode} {center.city}
+          {centerLocality(center)}
         </p>
 
         <div className={cn("flex flex-col gap-2 text-[15px]", wide ? "mt-5 md:mt-6" : "mt-6")}>
           <p>
-            <span className={open === null ? "text-ink/40" : open ? "text-ink" : "text-ink/40"}>
-              {open === null ? "…" : open ? "Ouvert" : "Fermé"}
-            </span>
-            <span className="text-ink/30"> · </span>
-            <span className="text-ink-soft">Aujourd’hui {hours}</span>
+            {open === null ? (
+              <span className="text-ink/40">…</span>
+            ) : closedToday ? (
+              <span className="text-ink/40">{hours}</span>
+            ) : (
+              <>
+                <span className={open ? "text-ink" : "text-ink/40"}>
+                  {open ? "Ouvert" : "Fermé"}
+                </span>
+                <span className="text-ink/30"> · </span>
+                <span className="text-ink-soft">Aujourd’hui {hours}</span>
+              </>
+            )}
           </p>
           <p className="text-ink-soft">{APPOINTMENT_LABEL[center.appointment]}</p>
           <p className="text-ink-soft">
@@ -436,45 +503,86 @@ function CenterDetailCard({
           })}
         </ul>
 
-        <div
-          className={cn(
-            "flex flex-wrap items-center gap-3",
-            wide ? "mt-auto pt-6" : "mt-8",
-          )}
-        >
-          <a
-            href={mapsUrl(center)}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-[3.1rem] items-center rounded-full bg-ink px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-hero transition-colors hover:bg-ink/85"
-          >
-            Itinéraire
-          </a>
-          {center.email ? (
-            <a
-              href={`mailto:${center.email}`}
-              className="inline-flex min-h-[3.1rem] items-center rounded-full border border-ink/15 px-6 font-display text-[1.1rem] leading-none font-medium tracking-[-0.03em] text-ink transition-colors hover:border-ink/40 hover:bg-ink/[0.04]"
-            >
-              Écrire
-            </a>
-          ) : null}
-          {onClose ? (
-            <button
-              type="button"
-              onClick={onClose}
-              className="ml-auto inline-flex min-h-[3.1rem] items-center gap-2 rounded-full px-5 font-display text-[1.05rem] leading-none font-medium tracking-[-0.03em] text-ink/55 transition-colors hover:bg-ink/[0.05] hover:text-ink"
-            >
-              <Icon name="close" className="size-4" />
-              Fermer
-            </button>
-          ) : null}
-        </div>
+        {wide ? (
+          <div className="mt-auto flex flex-wrap items-center gap-3 pt-6">{actions}</div>
+        ) : null}
       </div>
+
+      {!wide ? (
+        <div className="shrink-0 border-t border-ink/[0.08] px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] max-lg:grid max-lg:grid-cols-2 max-lg:gap-3 md:flex md:flex-wrap md:items-center md:gap-3 md:px-8 md:pb-7">
+          {actions}
+        </div>
+      ) : null}
     </article>
   );
 }
 
-function AllCentersModal({ onClose }: { onClose: () => void }) {
+function DirectoryCard({
+  center,
+  onOpen,
+}: {
+  center: Center;
+  onOpen: () => void;
+}) {
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    getClientFlag,
+    getServerFlag,
+  );
+  const open = isClient ? isCenterOpen(center) : null;
+  const hours = isClient ? todayHoursLabel(center) : "Horaires du jour";
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group w-full overflow-hidden rounded-[1.5rem] bg-hero text-left outline-none"
+      aria-haspopup="dialog"
+    >
+      <div className="relative aspect-[16/10] w-full overflow-hidden">
+        <Image
+          src={center.image}
+          alt=""
+          fill
+          quality={90}
+          sizes="(max-width: 1023px) 92vw, 400px"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+        />
+      </div>
+      <div className="px-4 py-3.5">
+        <p className="text-[10px] tracking-[0.16em] text-ink/40 uppercase">
+          {center.city}
+        </p>
+        <h3 className="mt-1 font-display text-[1.22rem] leading-[1.08] font-medium tracking-[-0.03em]">
+          {center.name}
+        </h3>
+        <p className="mt-2 text-[13px] leading-snug text-ink-soft">
+          {open === null ? (
+            <span className="text-ink/40">…</span>
+          ) : hours.startsWith("Fermé") ? (
+            <span className="text-ink/40">{hours}</span>
+          ) : (
+            <>
+              <span className={open ? "text-ink" : "text-ink/40"}>
+                {open ? "Ouvert" : "Fermé"}
+              </span>
+              <span className="text-ink/30"> · </span>
+              <span>Aujourd’hui {hours}</span>
+            </>
+          )}
+        </p>
+      </div>
+    </button>
+  );
+}
+
+function AllCentersModal({
+  onClose,
+  onOpenCenter,
+}: {
+  onClose: () => void;
+  onOpenCenter: (center: Center) => void;
+}) {
   const scroller = useRef<HTMLUListElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -521,6 +629,7 @@ function AllCentersModal({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (!window.matchMedia("(min-width: 1024px)").matches) return;
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         scrollByCard(-1);
@@ -572,8 +681,22 @@ function AllCentersModal({ onClose }: { onClose: () => void }) {
 
         <div className="relative min-h-0 flex-1">
           <ul
+            className="centers-directory-list absolute inset-0 overflow-y-auto overscroll-contain px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden"
+            data-lenis-prevent
+          >
+            {CENTERS.map((center) => (
+              <li key={center.id} className="mb-3 last:mb-0">
+                <DirectoryCard
+                  center={center}
+                  onOpen={() => onOpenCenter(center)}
+                />
+              </li>
+            ))}
+          </ul>
+
+          <ul
             ref={scroller}
-            className="center-scroller centers-directory-scroller absolute inset-x-0 top-0 bottom-[4.75rem] flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-5 md:bottom-[5.25rem] md:gap-6 md:px-8"
+            className="center-scroller centers-directory-scroller absolute inset-x-0 top-0 bottom-[4.75rem] hidden snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-5 md:bottom-[5.25rem] md:gap-6 md:px-8 lg:flex"
             data-lenis-prevent
           >
             {CENTERS.map((center) => (
@@ -591,7 +714,7 @@ function AllCentersModal({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
 
-          <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-3 md:bottom-4">
+          <div className="absolute inset-x-0 bottom-3 hidden items-center justify-center gap-3 md:bottom-4 lg:flex">
             <button
               type="button"
               onClick={() => scrollByCard(-1)}
@@ -628,7 +751,7 @@ function CenterModal({
   onClose: () => void;
 }) {
   return createPortal(
-    <div className="fixed inset-0 z-[90] flex items-center justify-center px-5 py-8">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center px-3 py-4 md:px-5 md:py-8">
       <button
         type="button"
         className="center-modal-backdrop absolute inset-0 bg-ink/55 backdrop-blur-2xl backdrop-saturate-50"

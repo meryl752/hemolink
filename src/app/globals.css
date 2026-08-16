@@ -251,7 +251,8 @@
 
 .center-scroller,
 .impact-scroller,
-.center-detail-card {
+.center-detail-card,
+.centers-directory-list {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -327,7 +328,8 @@
 
 .center-scroller::-webkit-scrollbar,
 .impact-scroller::-webkit-scrollbar,
-.center-detail-card::-webkit-scrollbar {
+.center-detail-card::-webkit-scrollbar,
+.centers-directory-list::-webkit-scrollbar {
   display: none;
 }
 
