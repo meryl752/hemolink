@@ -21,7 +21,8 @@ const LINKS = [
 export function Header() {
   const root = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const tl = useRef<gsap.core.Timeline | null>(null);
+  const items = useRef<HTMLElement[]>([]);
+  const closing = useRef(false);
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
@@ -32,50 +33,12 @@ export function Header() {
 
       const mm = gsap.matchMedia();
       mm.add("(max-width: 1023px)", () => {
-        const items = gsap.utils.toArray<HTMLElement>(".menu-item");
-        const reduce = prefersReducedMotion();
-
-        gsap.set(panelEl, {
-          autoAlpha: 0,
-          pointerEvents: "none",
-          clipPath: "inset(0 0 100% 0)",
-        });
-        gsap.set(items, { y: 28, autoAlpha: 0 });
-
-        if (reduce) {
-          tl.current = gsap
-            .timeline({ paused: true })
-            .set(panelEl, { autoAlpha: 1, pointerEvents: "auto", clipPath: "none" })
-            .set(items, { y: 0, autoAlpha: 1 });
-          return () => {
-            tl.current?.kill();
-            tl.current = null;
-          };
-        }
-
-        tl.current = gsap
-          .timeline({
-            paused: true,
-            defaults: { ease: "editorial" },
-            onReverseComplete: () => {
-              gsap.set(panelEl, { pointerEvents: "none" });
-            },
-          })
-          .set(panelEl, { pointerEvents: "auto" })
-          .to(
-            panelEl,
-            { autoAlpha: 1, clipPath: "inset(0 0 0% 0)", duration: 0.72 },
-            0,
-          )
-          .to(
-            items,
-            { y: 0, autoAlpha: 1, stagger: 0.055, duration: 0.7 },
-            0.18,
-          );
+        items.current = gsap.utils.toArray<HTMLElement>(".menu-item");
+        gsap.set(panelEl, { autoAlpha: 0, pointerEvents: "none" });
+        gsap.set(items.current, { y: 18, autoAlpha: 0 });
 
         return () => {
-          tl.current?.kill();
-          tl.current = null;
+          gsap.killTweensOf([panelEl, items.current]);
         };
       });
 
@@ -85,9 +48,68 @@ export function Header() {
   );
 
   const setMenu = contextSafe((next: boolean) => {
+    const panelEl = panel.current;
+    const links = items.current;
+    if (!panelEl) return;
+
+    closing.current = !next;
     setOpen(next);
-    if (next) tl.current?.play();
-    else tl.current?.reverse();
+
+    if (prefersReducedMotion()) {
+      gsap.set(panelEl, {
+        autoAlpha: next ? 1 : 0,
+        pointerEvents: next ? "auto" : "none",
+      });
+      gsap.set(links, { y: 0, autoAlpha: next ? 1 : 0 });
+      closing.current = false;
+      return;
+    }
+
+    gsap.killTweensOf([panelEl, links]);
+
+    if (next) {
+      gsap.set(panelEl, { pointerEvents: "auto" });
+      gsap.to(panelEl, {
+        autoAlpha: 1,
+        duration: 0.42,
+        ease: "power2.out",
+        force3D: true,
+      });
+      gsap.fromTo(
+        links,
+        { y: 18, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.48,
+          stagger: 0.038,
+          ease: "power3.out",
+          overwrite: true,
+          force3D: true,
+        },
+      );
+      return;
+    }
+
+    gsap.to(links, {
+      y: 10,
+      autoAlpha: 0,
+      duration: 0.26,
+      stagger: 0.018,
+      ease: "power2.in",
+      overwrite: true,
+    });
+    gsap.to(panelEl, {
+      autoAlpha: 0,
+      duration: 0.36,
+      delay: 0.06,
+      ease: "power2.inOut",
+      onComplete: () => {
+        gsap.set(panelEl, { pointerEvents: "none" });
+        closing.current = false;
+        if (window.scrollY > 16) setHidden(true);
+      },
+    });
   });
 
   useEffect(() => {
@@ -108,7 +130,7 @@ export function Header() {
 
   useEffect(() => {
     const onScroll = () => {
-      if (open) {
+      if (open || closing.current) {
         setHidden(false);
         return;
       }
@@ -130,7 +152,7 @@ export function Header() {
       <div
         ref={panel}
         id="menu-mobile"
-        className="pointer-events-none fixed inset-0 z-10 bg-hero opacity-0 lg:hidden"
+        className="pointer-events-none invisible fixed inset-0 z-10 bg-hero lg:hidden"
         aria-hidden={!open}
       >
         <nav
@@ -152,7 +174,7 @@ export function Header() {
 
       <div
         className={cn(
-          "relative z-20 mx-auto flex max-w-[1440px] items-center gap-6 px-5 pt-20 pb-5 md:px-8 lg:px-12 lg:pt-14",
+          "relative z-20 mx-auto flex max-w-[1440px] items-center gap-6 px-5 pb-4 pt-[max(3.75rem,calc(env(safe-area-inset-top)+2.9rem))] md:px-8 lg:px-12 lg:pt-14",
           (!hidden || open) && "pointer-events-auto",
         )}
       >
@@ -183,13 +205,21 @@ export function Header() {
           onClick={() => setMenu(!open)}
         >
           <span className="sr-only">{open ? "Fermer le menu" : "Ouvrir le menu"}</span>
-          <span
-            className={cn(
-              "flex size-6 items-center justify-center transition-transform duration-500 ease-out",
-              open && "rotate-90",
-            )}
-          >
-            <Icon name={open ? "close" : "menu"} className="size-6 text-ink" />
+          <span className="relative size-6">
+            <Icon
+              name="menu"
+              className={cn(
+                "absolute inset-0 size-6 text-ink transition-opacity duration-300 ease-out",
+                open ? "opacity-0" : "opacity-100",
+              )}
+            />
+            <Icon
+              name="close"
+              className={cn(
+                "absolute inset-0 size-6 text-ink transition-opacity duration-300 ease-out",
+                open ? "opacity-100" : "opacity-0",
+              )}
+            />
           </span>
         </button>
       </div>

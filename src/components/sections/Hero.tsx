@@ -47,16 +47,40 @@ export function Hero() {
       const mm = gsap.matchMedia();
 
       mm.add("(max-width: 1023px)", () => {
+        const intro = root.current?.querySelector<HTMLElement>(".hero-intro");
+        const introPhoto =
+          root.current?.querySelector<HTMLElement>(".hero-intro-photo");
         const lines = gsap.utils.toArray<HTMLElement>(".hero-intro-line > span");
-        if (lines.length) {
-          gsap.from(lines, {
-            yPercent: 115,
-            rotateZ: 4,
-            stagger: 0.07,
-            duration: 1.15,
-            ease: "editorial",
-          });
-        }
+        if (!intro || !introPhoto) return;
+
+        gsap.set(introPhoto, { autoAlpha: 0, scale: 1.06, transformOrigin: "50% 38%" });
+        gsap.set(lines, { yPercent: 110, rotateZ: 3 });
+
+        gsap
+          .timeline({ defaults: { ease: "editorial" } })
+          .to(introPhoto, { autoAlpha: 1, scale: 1, duration: 1.2, force3D: true })
+          .to(
+            lines,
+            {
+              yPercent: 0,
+              rotateZ: 0,
+              stagger: 0.07,
+              duration: 1.05,
+              force3D: true,
+            },
+            0.22,
+          );
+
+        gsap.to(introPhoto, {
+          yPercent: 12,
+          ease: "none",
+          scrollTrigger: {
+            trigger: intro,
+            start: "top top",
+            end: "+=100%",
+            scrub: 0.55,
+          },
+        });
       });
 
       mm.add("(min-width: 1024px)", () => {
@@ -170,7 +194,7 @@ export function Hero() {
 
   return (
     <section id="hero" ref={root} className="relative bg-hero">
-      <div className="hero-intro relative min-h-svh overflow-hidden bg-hero lg:hidden">
+      <div className="hero-intro sticky top-0 z-0 min-h-svh overflow-hidden bg-hero lg:hidden">
         <div className="hero-intro-photo pointer-events-none absolute inset-0">
           <Image
             src="/hero/medecin-2.png"
@@ -183,7 +207,7 @@ export function Hero() {
           />
         </div>
 
-        <h1 className="absolute bottom-10 left-8 z-10 w-[calc(100%-4rem)] text-left font-display text-[min(3.5rem,calc((100vw-4rem)/9.5))] leading-[0.94] font-medium tracking-[-0.035em] md:bottom-12 md:left-12">
+        <h1 className="hero-intro-title absolute bottom-10 left-8 z-10 w-[calc(100%-4rem)] text-left font-display text-[min(3.5rem,calc((100vw-4rem)/9.5))] leading-[0.94] font-medium tracking-[-0.035em] md:bottom-12 md:left-12">
           <span className="hero-intro-line block overflow-hidden">
             <span className="block whitespace-nowrap text-ink">Votre premier</span>
           </span>
@@ -200,8 +224,8 @@ export function Hero() {
         </h1>
       </div>
 
-      <div className="max-lg:min-h-0 min-h-[100svh] lg:h-[340vh]">
-        <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden max-lg:min-h-0 max-lg:overflow-visible lg:sticky lg:top-0 lg:h-svh">
+      <div className="relative z-20 bg-hero max-lg:min-h-0 min-h-[100svh] lg:z-auto lg:h-[340vh]">
+        <div className="hero-stage relative isolate min-h-[100svh] overflow-hidden bg-hero max-lg:min-h-0 max-lg:overflow-visible lg:sticky lg:top-0 lg:h-svh lg:bg-transparent">
           <div className="hero-photo hero-photo-mask pointer-events-none absolute top-0 right-0 z-0 h-full w-[min(62vw,820px)] max-lg:relative max-lg:right-auto max-lg:h-[52svh] max-lg:w-full max-lg:overflow-hidden">
             <div className="hero-img-a absolute inset-0">
               <Image

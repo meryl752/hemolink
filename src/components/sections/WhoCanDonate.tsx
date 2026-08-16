@@ -181,7 +181,7 @@ export function WhoCanDonate() {
         className="who-pin flex min-h-svh items-center max-lg:min-h-0"
       >
         <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-14 px-5 pt-24 pb-10 md:gap-16 md:px-8 md:pt-32 md:pb-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-12 xl:gap-20">
-          <h2 className="who-title w-full max-w-[min(100%,28rem)] shrink-0 font-display text-[clamp(2.4rem,5.2vw,4.6rem)] leading-[0.96] font-medium tracking-[-0.03em] max-lg:text-[2.25rem]">
+          <h2 className="who-title w-full max-w-[min(100%,28rem)] shrink-0 font-display text-[clamp(2.4rem,5.2vw,4.6rem)] leading-[0.96] font-medium tracking-[-0.03em] max-lg:text-[min(2.25rem,calc((100vw-2.5rem)/12.4))]">
             <span className="hidden whitespace-nowrap lg:block">
               Il vous suffit de
             </span>
@@ -191,8 +191,10 @@ export function WhoCanDonate() {
             <span className="mt-[0.06em] hidden whitespace-nowrap text-silver lg:block">
               conditions.
             </span>
-            <span className="block lg:hidden">Il vous suffit de</span>
-            <span className="mt-[0.06em] block text-silver lg:hidden">
+            <span className="block whitespace-nowrap lg:hidden">
+              Il vous suffit de
+            </span>
+            <span className="mt-[0.06em] block whitespace-nowrap text-silver lg:hidden">
               respecter ces conditions.
             </span>
           </h2>
